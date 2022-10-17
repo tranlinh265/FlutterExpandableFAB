@@ -100,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
         distance: 80.0,
         isExtendedFab: true,
         extendedFabTitle: "Edit",
+        closeOnPressChildItem: true,
         children: [
           ActionButton(
             onPressed: () => _showAction(context, 0),

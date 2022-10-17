@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 enum FabStyle { horizontal, vertical, arc, cross }
 
-@immutable
 class ExpandableFab extends StatefulWidget {
   ExpandableFab({
     Key? key,
@@ -14,14 +13,17 @@ class ExpandableFab extends StatefulWidget {
     required this.style,
     this.isExtendedFab = false,
     this.extendedFabTitle = "",
+    this.closeOnPressChildItem = false,
   }) : super(key: key);
 
   final bool? initialOpen;
   final double distance;
-  final List<Widget> children;
+  final List<ActionButton> children;
   final FabStyle style;
   bool isExtendedFab;
   String extendedFabTitle;
+  bool closeOnPressChildItem;
+
   @override
   State<ExpandableFab> createState() => _ExpandableFabState();
 }
@@ -106,6 +108,20 @@ class _ExpandableFabState extends State<ExpandableFab>
 
   List<Widget> _buildExpandingActionButtons() {
     final children = <Widget>[];
+
+    final actionButtonWidgets = <ActionButtonWidget>[];
+    for (ActionButton actionButton in widget.children) {
+      actionButtonWidgets.add(ActionButtonWidget(
+        icon: actionButton.icon,
+        onPressed: () {
+          if (widget.closeOnPressChildItem) {
+            _toggle();
+          }
+          actionButton.onPressed?.call();
+        },
+      ));
+    }
+
     final count = widget.children.length;
     if (widget.style == FabStyle.arc) {
       final step = 90.0 / (count - 1);
@@ -117,7 +133,7 @@ class _ExpandableFabState extends State<ExpandableFab>
             directionInDegrees: angleInDegrees,
             maxDistance: widget.distance,
             progress: _expandAnimation,
-            child: widget.children[i],
+            child: actionButtonWidgets[i],
           ),
         );
       }
@@ -142,7 +158,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           directionInDegrees: directionInDegrees,
           maxDistance: dist,
           progress: _expandAnimation,
-          child: widget.children[i],
+          child: actionButtonWidgets[i],
         ),
       );
     }
@@ -222,8 +238,8 @@ class _ExpandingActionButton extends StatelessWidget {
 }
 
 @immutable
-class ActionButton extends StatelessWidget {
-  const ActionButton({
+class ActionButtonWidget extends StatelessWidget {
+  const ActionButtonWidget({
     Key? key,
     this.onPressed,
     required this.icon,
@@ -247,4 +263,14 @@ class ActionButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class ActionButton {
+  const ActionButton({
+    this.onPressed,
+    required this.icon,
+  });
+
+  final VoidCallback? onPressed;
+  final Widget icon;
 }
