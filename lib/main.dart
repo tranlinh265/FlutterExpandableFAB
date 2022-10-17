@@ -96,23 +96,38 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: ExpandableFab(
-        style: FabStyle.vertical,
+        style: FabStyle.arc,
         distance: 80.0,
         isExtendedFab: true,
         extendedFabTitle: "Edit",
-        closeOnPressChildItem: true,
+        closeOnPressChildItem: false,
         children: [
           ActionButton(
             onPressed: () => _showAction(context, 0),
             icon: const Icon(Icons.add),
+            title: Container(
+                margin: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                color: Colors.amber,
+                child: const Text("Add")),
           ),
           ActionButton(
             onPressed: () => _showAction(context, 1),
             icon: const Icon(Icons.remove),
+            title: Container(
+                margin: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                color: Colors.amber,
+                child: const Text("Remove")),
           ),
           ActionButton(
             onPressed: () => _showAction(context, 2),
             icon: const Icon(Icons.restart_alt),
+            title: Container(
+                margin: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                color: Colors.amber,
+                child: const Text("Reset")),
           ),
         ],
       ),

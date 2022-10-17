@@ -110,9 +110,14 @@ class _ExpandableFabState extends State<ExpandableFab>
     final children = <Widget>[];
 
     final actionButtonWidgets = <ActionButtonWidget>[];
+
+    bool verticalTitle = widget.style == FabStyle.horizontal;
+
     for (ActionButton actionButton in widget.children) {
       actionButtonWidgets.add(ActionButtonWidget(
         icon: actionButton.icon,
+        title: widget.style == FabStyle.arc ? null : actionButton.title,
+        verticalTilte: verticalTitle,
         onPressed: () {
           if (widget.closeOnPressChildItem) {
             _toggle();
@@ -243,14 +248,22 @@ class ActionButtonWidget extends StatelessWidget {
     Key? key,
     this.onPressed,
     required this.icon,
+    this.title,
+    this.verticalTilte = false,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
   final Widget icon;
+  final Widget? title;
+  final bool verticalTilte;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    return _buildChild(theme);
+  }
+
+  Widget _buildIcon(ThemeData theme) {
     return Material(
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
@@ -263,14 +276,39 @@ class ActionButtonWidget extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildChild(ThemeData theme) {
+    if (title == null) {
+      return _buildIcon(theme);
+    } else if (verticalTilte) {
+      return Column(
+        children: _buildChildren(theme),
+      );
+    } else {
+      return Row(
+        children: _buildChildren(theme),
+      );
+    }
+  }
+
+  List<Widget> _buildChildren(ThemeData theme) {
+    final output = <Widget>[];
+
+    output.add(title!);
+
+    output.add(_buildIcon(theme));
+    return output;
+  }
 }
 
 class ActionButton {
   const ActionButton({
     this.onPressed,
     required this.icon,
+    this.title,
   });
 
   final VoidCallback? onPressed;
   final Widget icon;
+  final Widget? title;
 }
