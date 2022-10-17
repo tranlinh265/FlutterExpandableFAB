@@ -6,19 +6,22 @@ enum FabStyle { horizontal, vertical, arc, cross }
 
 @immutable
 class ExpandableFab extends StatefulWidget {
-  const ExpandableFab({
+  ExpandableFab({
     Key? key,
     this.initialOpen,
     required this.distance,
     required this.children,
     required this.style,
+    this.isExtendedFab = false,
+    this.extendedFabTitle = "",
   }) : super(key: key);
 
   final bool? initialOpen;
   final double distance;
   final List<Widget> children;
   final FabStyle style;
-
+  bool isExtendedFab;
+  String extendedFabTitle;
   @override
   State<ExpandableFab> createState() => _ExpandableFabState();
 }
@@ -162,10 +165,16 @@ class _ExpandableFabState extends State<ExpandableFab>
           opacity: _open ? 0.0 : 1.0,
           curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
           duration: const Duration(milliseconds: 250),
-          child: FloatingActionButton(
-            onPressed: _toggle,
-            child: const Icon(Icons.create),
-          ),
+          child: widget.isExtendedFab
+              ? FloatingActionButton.extended(
+                  onPressed: _toggle,
+                  label: Text(widget.extendedFabTitle),
+                  icon: const Icon(Icons.create),
+                )
+              : FloatingActionButton(
+                  onPressed: _toggle,
+                  child: const Icon(Icons.create),
+                ),
         ),
       ),
     );

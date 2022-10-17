@@ -96,8 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: ExpandableFab(
-        style: FabStyle.cross,
+        style: FabStyle.vertical,
         distance: 80.0,
+        isExtendedFab: true,
+        extendedFabTitle: "Edit",
         children: [
           ActionButton(
             onPressed: () => _showAction(context, 0),
