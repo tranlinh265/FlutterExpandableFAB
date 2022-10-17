@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+enum FabStyle { horizontal, vertical, arc }
+
 @immutable
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
@@ -9,11 +11,13 @@ class ExpandableFab extends StatefulWidget {
     this.initialOpen,
     required this.distance,
     required this.children,
+    required this.style,
   }) : super(key: key);
 
   final bool? initialOpen;
   final double distance;
   final List<Widget> children;
+  final FabStyle style;
 
   @override
   State<ExpandableFab> createState() => _ExpandableFabState();
@@ -100,19 +104,48 @@ class _ExpandableFabState extends State<ExpandableFab>
   List<Widget> _buildExpandingActionButtons() {
     final children = <Widget>[];
     final count = widget.children.length;
-    final step = 90.0 / (count - 1);
-    for (var i = 0, angleInDegrees = 0.0;
-        i < count;
-        i++, angleInDegrees += step) {
-      children.add(
-        _ExpandingActionButton(
-          directionInDegrees: angleInDegrees,
-          maxDistance: widget.distance,
-          progress: _expandAnimation,
-          child: widget.children[i],
-        ),
-      );
+    if (widget.style == FabStyle.arc) {
+      final step = 90.0 / (count - 1);
+      for (var i = 0, angleInDegrees = 0.0;
+          i < count;
+          i++, angleInDegrees += step) {
+        children.add(
+          _ExpandingActionButton(
+            directionInDegrees: angleInDegrees,
+            maxDistance: widget.distance,
+            progress: _expandAnimation,
+            child: widget.children[i],
+          ),
+        );
+      }
+    } else if (widget.style == FabStyle.vertical) {
+      for (var i = 0; i < count; i++) {
+        final dist = widget.distance * (i + 1);
+
+        children.add(
+          _ExpandingActionButton(
+            directionInDegrees: 90,
+            maxDistance: dist,
+            progress: _expandAnimation,
+            child: widget.children[i],
+          ),
+        );
+      }
+    } else if (widget.style == FabStyle.horizontal) {
+      for (var i = 0; i < count; i++) {
+        final dist = widget.distance * (i + 1);
+
+        children.add(
+          _ExpandingActionButton(
+            directionInDegrees: 0,
+            maxDistance: dist,
+            progress: _expandAnimation,
+            child: widget.children[i],
+          ),
+        );
+      }
     }
+
     return children;
   }
 
