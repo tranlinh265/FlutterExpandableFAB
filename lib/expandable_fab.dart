@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-enum FabStyle { horizontal, vertical, arc, cross }
+enum FabStyle { horizontal, vertical, arc, cross, shuffle }
 
 class ExpandableFab extends StatefulWidget {
   ExpandableFab({
@@ -33,10 +33,12 @@ class _ExpandableFabState extends State<ExpandableFab>
   late final AnimationController _controller;
   late final Animation<double> _expandAnimation;
   bool _open = false;
+  late FabStyle _style;
 
   @override
   void initState() {
     super.initState();
+    _setStyle();
     _open = widget.initialOpen ?? false;
     _controller = AnimationController(
       value: _open ? 1.0 : 0.0,
@@ -50,6 +52,16 @@ class _ExpandableFabState extends State<ExpandableFab>
     );
   }
 
+  void _setStyle() {
+    if (widget.style == FabStyle.shuffle) {
+      final styles = [FabStyle.arc, FabStyle.cross, FabStyle.horizontal];
+      styles.shuffle();
+      _style = styles[0];
+    } else {
+      _style = widget.style;
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -60,6 +72,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     setState(() {
       _open = !_open;
       if (_open) {
+        _setStyle();
         _controller.forward();
       } else {
         _controller.reverse();
@@ -111,12 +124,12 @@ class _ExpandableFabState extends State<ExpandableFab>
 
     final actionButtonWidgets = <ActionButtonWidget>[];
 
-    bool verticalTitle = widget.style == FabStyle.horizontal;
+    bool verticalTitle = _style == FabStyle.horizontal;
 
     for (ActionButton actionButton in widget.children) {
       actionButtonWidgets.add(ActionButtonWidget(
         icon: actionButton.icon,
-        title: widget.style == FabStyle.arc ? null : actionButton.title,
+        title: _style == FabStyle.arc ? null : actionButton.title,
         verticalTilte: verticalTitle,
         onPressed: () {
           if (widget.closeOnPressChildItem) {
@@ -128,7 +141,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     }
 
     final count = widget.children.length;
-    if (widget.style == FabStyle.arc) {
+    if (_style == FabStyle.arc) {
       final step = 90.0 / (count - 1);
       for (var i = 0, angleInDegrees = 0.0;
           i < count;
@@ -147,11 +160,11 @@ class _ExpandableFabState extends State<ExpandableFab>
 
     double directionInDegrees = 0;
 
-    if (widget.style == FabStyle.vertical) {
+    if (_style == FabStyle.vertical) {
       directionInDegrees = 90;
-    } else if (widget.style == FabStyle.horizontal) {
+    } else if (_style == FabStyle.horizontal) {
       directionInDegrees = 0;
-    } else if (widget.style == FabStyle.cross) {
+    } else if (_style == FabStyle.cross) {
       directionInDegrees = 60;
     }
 
