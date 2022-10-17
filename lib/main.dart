@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: ExpandableFab(
-        style: FabStyle.horizontal,
+        style: FabStyle.cross,
         distance: 80.0,
         children: [
           ActionButton(

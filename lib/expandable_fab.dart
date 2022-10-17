@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-enum FabStyle { horizontal, vertical, arc }
+enum FabStyle { horizontal, vertical, arc, cross }
 
 @immutable
 class ExpandableFab extends StatefulWidget {
@@ -118,34 +118,31 @@ class _ExpandableFabState extends State<ExpandableFab>
           ),
         );
       }
-    } else if (widget.style == FabStyle.vertical) {
-      for (var i = 0; i < count; i++) {
-        final dist = widget.distance * (i + 1);
-
-        children.add(
-          _ExpandingActionButton(
-            directionInDegrees: 90,
-            maxDistance: dist,
-            progress: _expandAnimation,
-            child: widget.children[i],
-          ),
-        );
-      }
-    } else if (widget.style == FabStyle.horizontal) {
-      for (var i = 0; i < count; i++) {
-        final dist = widget.distance * (i + 1);
-
-        children.add(
-          _ExpandingActionButton(
-            directionInDegrees: 0,
-            maxDistance: dist,
-            progress: _expandAnimation,
-            child: widget.children[i],
-          ),
-        );
-      }
+      return children;
     }
 
+    double directionInDegrees = 0;
+
+    if (widget.style == FabStyle.vertical) {
+      directionInDegrees = 90;
+    } else if (widget.style == FabStyle.horizontal) {
+      directionInDegrees = 0;
+    } else if (widget.style == FabStyle.cross) {
+      directionInDegrees = 60;
+    }
+
+    for (var i = 0; i < count; i++) {
+      final dist = widget.distance * (i + 1);
+
+      children.add(
+        _ExpandingActionButton(
+          directionInDegrees: directionInDegrees,
+          maxDistance: dist,
+          progress: _expandAnimation,
+          child: widget.children[i],
+        ),
+      );
+    }
     return children;
   }
 
