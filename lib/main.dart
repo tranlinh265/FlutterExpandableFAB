@@ -105,29 +105,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ActionButton(
             onPressed: () => _showAction(context, 0),
             icon: const Icon(Icons.add),
-            title: Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                color: Colors.amber,
-                child: const Text("Add")),
+            title: "Add",
           ),
           ActionButton(
             onPressed: () => _showAction(context, 1),
             icon: const Icon(Icons.remove),
-            title: Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                color: Colors.amber,
-                child: const Text("Remove")),
+            title: "Remove",
           ),
           ActionButton(
             onPressed: () => _showAction(context, 2),
             icon: const Icon(Icons.restart_alt),
-            title: Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                color: Colors.amber,
-                child: const Text("Reset")),
+            title: "Reset",
           ),
         ],
       ),

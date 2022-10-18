@@ -127,9 +127,16 @@ class _ExpandableFabState extends State<ExpandableFab>
     bool verticalTitle = _style == FabStyle.horizontal;
 
     for (ActionButton actionButton in widget.children) {
+      Widget? titleWidget;
+      if (_style != FabStyle.arc && actionButton.title != null) {
+        String title = "${actionButton.title}";
+        titleWidget = verticalTitle
+            ? VerticalTitle(text: title)
+            : HorizontalTitle(text: title);
+      }
       actionButtonWidgets.add(ActionButtonWidget(
         icon: actionButton.icon,
-        title: _style == FabStyle.arc ? null : actionButton.title,
+        title: titleWidget,
         verticalTilte: verticalTitle,
         onPressed: () {
           if (widget.closeOnPressChildItem) {
@@ -323,5 +330,42 @@ class ActionButton {
 
   final VoidCallback? onPressed;
   final Widget icon;
-  final Widget? title;
+  final String? title;
+}
+
+class HorizontalTitle extends StatelessWidget {
+  const HorizontalTitle({Key? key, required this.text}) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      color: Colors.amber,
+      child: Text(text),
+    );
+  }
+}
+
+class VerticalTitle extends StatelessWidget {
+  const VerticalTitle({Key? key, required this.text}) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+      color: Colors.amber,
+      child: Wrap(
+        runSpacing: 30,
+        direction: Axis.vertical,
+        alignment: WrapAlignment.center,
+        children: text.split("").map((string) => Text(string)).toList(),
+      ),
+    );
+  }
 }
